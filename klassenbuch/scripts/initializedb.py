@@ -1,5 +1,6 @@
 import os
 import sys
+import datetime
 import transaction
 
 from sqlalchemy import engine_from_config
@@ -15,6 +16,9 @@ from ..models import (
     DBSession,
     MyModel,
     Base,
+    Entry,
+    Klasse,
+    Pupil,
     )
 
 
@@ -36,5 +40,14 @@ def main(argv=sys.argv):
     DBSession.configure(bind=engine)
     Base.metadata.create_all(engine)
     with transaction.manager:
-        model = MyModel(name='one', value=1)
-        DBSession.add(model)
+        pupil1 = MyModel(name='Hans')
+        DBSession.add(pupil1)
+    with transaction.manager:
+        eintrag1 = Entry(
+            date=datetime.date.today(),
+            pupil=pupil1,
+            lesson_no=1,
+            attendance=True,
+            #delay=25,
+            )
+        DBSession.add(eintrag1)
