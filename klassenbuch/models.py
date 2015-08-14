@@ -32,17 +32,29 @@ class MyModel(Base):
 
 Index('my_index', MyModel.name, unique=True, mysql_length=255)
 
+
 class Klasse(Base):
+    """
+    A class (or course) of pupils
+    """
     __tablename__ = 'klasse'
     id = Column(Integer, primary_key=True)
     name = Column(Unicode)
     timetable = None
     
+
 class Pupil(Base):
+    """
+    the students
+    """
     __tablename__ = 'pupil'
     id = Column(Integer, primary_key=True)
     name = Column(Text)
 
+
+"""
+Each pupil has a number of entries.
+"""
 pupils_entries = Table(
     'pupils_entries', Base.metadata,
     Column(
@@ -53,7 +65,11 @@ pupils_entries = Table(
         primary_key=True, nullable=False),
 )
 
+
 class Entry(Base):
+    """
+    a classbook entry
+    """
     __tablename__ = 'entry'
     id = Column(Integer, primary_key=True)
     
