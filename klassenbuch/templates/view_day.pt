@@ -44,30 +44,24 @@
             <li>${day.date}</li>
             <li>${dir(day)}</li>
             <li>${day.pupil[0].name}</li>
-            <li>${day.lessons}</li>
           </ul>
         </div>
         <div class="row">
           <table class="table" rules="rows"><!--! the actual table  -->
                 <tr>
                   <!-- th>id</th -->
-                  <th>lesson No.</th>
+                  <th>Stunde</th>
                   <th>Anwesenheit</th>
                   <th>Versp&auml;tung</th>
-                  <th>amount</th>
-                  <th>valid or<br/>cancelled?</th>
-                  <th>normal or<br/>reversal?</th>
-                  <th>default or<br/>altered?</th>
                   <!-- th>preced.</th -->
                   <!-- th>succ.</th -->
                 </tr>
-
                 <!--! loop over the list of invoices -->
                 <tr tal:repeat="l day.lessons"
                     tal:attributes="id python: 'invoice_{0}'.format(l.id)">
                   <!-- td>${l.id}</td -->
                   <td>${l.lesson_no}</td>
-                  <td>${l.attendance or "Fehlt!"}</td>
+                  <td>${"Ja" if l.attendance else "Fehlt!"}</td>
                   <td>${l.delay}</td>
                 </tr>
               </table>
