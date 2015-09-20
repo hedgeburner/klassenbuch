@@ -1,7 +1,7 @@
 klassenbuch README
 ==================
 
-Datenbanksystem zum Erstellen eines digitalen Klassenbuches.
+Datenbanksystem zum erstellen eines digitalen Klassenbuches.
 
 
 Getting Started
