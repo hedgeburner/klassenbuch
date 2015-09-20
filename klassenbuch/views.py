@@ -5,17 +5,26 @@ from sqlalchemy.exc import DBAPIError
 
 from .models import (
     DBSession,
-    MyModel,
+    Day,
+    Lesson,
+    Pupil,
+    Klasse
     )
 
+@view_config(route_name='view_day', renderer='templates/view_day.pt')
+def day_view(request):
+    _id = request.matchdict['dayid']
+    _day = Day.get_by_id(_id)
+    
+    return {'day': _day,}
 
 @view_config(route_name='home', renderer='templates/mytemplate.pt')
 def my_view(request):
-    try:
-        one = DBSession.query(MyModel).filter(MyModel.name == 'one').first()
-    except DBAPIError:
-        return Response(conn_err_msg, content_type='text/plain', status_int=500)
-    return {'one': one, 'project': 'klassenbuch'}
+    #try:
+    #    one = DBSession.query(MyModel).filter(MyModel.name == 'one').first()
+    #except DBAPIError:
+    #    return Response(conn_err_msg, content_type='text/plain', status_int=500)
+    return {'one': 'one', 'project': 'klassenbuch'}
 
 
 conn_err_msg = """\

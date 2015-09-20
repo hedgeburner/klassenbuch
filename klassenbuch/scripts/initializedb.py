@@ -62,7 +62,7 @@ def main(argv=sys.argv):
             lessons=[lesson1, lesson2, lesson3],
             )
         # create one pupil named hans
-        pupil1 = Pupil(name='Hans', days=[heute])
+        pupil1 = Pupil(name='Häns', days=[heute])
         # now add them to the database for persistence
         DBSession.add(pupil1)
         DBSession.add(heute)

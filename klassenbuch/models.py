@@ -57,6 +57,10 @@ class Day(Base):
     date = Column(Date)
     excused = Column(Integer, default=0)
     lessons = relationship("Lesson", backref='day')
+    
+    @classmethod
+    def get_by_id(cls, id):
+        return DBSession.query(cls).filter(cls.id == id).first()
 
 
 class Lesson(Base):
