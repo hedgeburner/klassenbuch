@@ -80,6 +80,3 @@ pupils_days = Table(
     Column(
         'day_id', Integer, ForeignKey('day.id'), nullable=False)
 )
-
-
-    

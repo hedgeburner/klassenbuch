@@ -59,22 +59,10 @@ def main(argv=sys.argv):
         heute = Day(
             date=datetime.date.today(),
             excused = False,
-            #lessons=[lesson1, lesson2, lesson3],
+            lessons=[lesson1, lesson2, lesson3],
             )
-        heute.lessons=[lesson1, lesson2, lesson3]
         # create one pupil named hans
         pupil1 = Pupil(name='Hans', days=[heute])
-        
-        
-        ##add the three lessons to heute
-        #lesson1.day=[heute]
-        #lesson2.day=[heute]
-        #lesson3.day=[heute]
-        ## add the entry to hans
-        #heute.pupil = [pupil1]
         # now add them to the database for persistence
         DBSession.add(pupil1)
         DBSession.add(heute)
-        #DBSession.add(lesson1)
-        #DBSession.add(lesson2)
-        #DBSession.add(lesson3)
