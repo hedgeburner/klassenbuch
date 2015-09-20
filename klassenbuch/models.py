@@ -24,15 +24,6 @@ DBSession = scoped_session(sessionmaker(extension=ZopeTransactionExtension()))
 Base = declarative_base()
 
 
-class MyModel(Base):
-    __tablename__ = 'models'
-    id = Column(Integer, primary_key=True)
-    name = Column(Text)
-    value = Column(Integer)
-
-Index('my_index', MyModel.name, unique=True, mysql_length=255)
-
-
 class Klasse(Base):
     """
     A class (or course) of pupils
@@ -50,35 +41,45 @@ class Pupil(Base):
     __tablename__ = 'pupil'
     id = Column(Integer, primary_key=True)
     name = Column(Text)
+    days = relationship("Day",
+                        secondary='pupils_days',
+                        backref='pupil')
 
 
-"""
-Each pupil has a number of entries.
-"""
-pupils_entries = Table(
-    'pupils_entries', Base.metadata,
-    Column(
-        'pupil_id', Integer, ForeignKey('pupil.id'),
-        primary_key=True, nullable=False),
-    Column(
-        'entry_id', Integer, ForeignKey('entry.id'),
-        primary_key=True, nullable=False),
-)
-
-
-class Entry(Base):
+class Day(Base):
     """
-    a classbook entry
+    Table containing schooldays of one individual pupil.
+    Every day references an apropiate number     of lesson objects.
+    Here we store the status of official excuses for this day.
     """
-    __tablename__ = 'entry'
+    __tablename__ = 'day'
     id = Column(Integer, primary_key=True)
-    
     date = Column(Date)
-    pupil = relationship(
-            Pupil,
-            secondary=pupils_entries,
-            backref='entry')
+    excused = Column(Integer, default=0)
+    lessons = relationship("Lesson", backref='day')
 
+
+class Lesson(Base):
+    """
+    Table containing lessons of individual pupils.
+    Here we store attendance or delays of that particular lesson
+    of this particular pupil.
+    """
+    __tablename__ = 'lesson'
+    id = Column(Integer, primary_key=True)
     lesson_no = Column(Integer)
     attendance = Column(Boolean, default=True)
     delay = Column(Integer, default=0)
+    day_id = Column(Integer, ForeignKey('day.id'))
+
+# Table linking days with the pupils they belong to.
+pupils_days = Table(
+    'pupils_days', Base.metadata,
+    Column(
+        'pupil_id', Integer, ForeignKey('pupil.id'), nullable=False),
+    Column(
+        'day_id', Integer, ForeignKey('day.id'), nullable=False)
+)
+
+
+    

@@ -14,11 +14,11 @@ from pyramid.scripts.common import parse_vars
 
 from ..models import (
     DBSession,
-    MyModel,
     Base,
-    Entry,
     Klasse,
     Pupil,
+    Day,
+    Lesson,
     )
 
 
@@ -40,17 +40,41 @@ def main(argv=sys.argv):
     DBSession.configure(bind=engine)
     Base.metadata.create_all(engine)
     with transaction.manager:
-        # create one pupil named hans
-        pupil1 = Pupil(name='Hans')
-        # create a classbook entry 
-        eintrag1 = Entry(
-            date=datetime.date.today(),
-            lesson_no=1,
+        #create a lesson for pupil1
+        lesson1 = Lesson(
             attendance=True,
-            # delay=25,
+            delay=20,
+            lesson_no=1
+        )
+        lesson2 = Lesson(
+            attendance=True,
+            delay=0,
+            lesson_no=2
+        )
+        lesson3=Lesson(
+            attendance=False,
+            lesson_no=3
+        )
+        # create a classbook entry 
+        heute = Day(
+            date=datetime.date.today(),
+            excused = False,
+            #lessons=[lesson1, lesson2, lesson3],
             )
-        # add the entry to hans
-        eintrag1.pupil = [pupil1]
+        heute.lessons=[lesson1, lesson2, lesson3]
+        # create one pupil named hans
+        pupil1 = Pupil(name='Hans', days=[heute])
+        
+        
+        ##add the three lessons to heute
+        #lesson1.day=[heute]
+        #lesson2.day=[heute]
+        #lesson3.day=[heute]
+        ## add the entry to hans
+        #heute.pupil = [pupil1]
         # now add them to the database for persistence
         DBSession.add(pupil1)
-        DBSession.add(eintrag1)
+        DBSession.add(heute)
+        #DBSession.add(lesson1)
+        #DBSession.add(lesson2)
+        #DBSession.add(lesson3)
