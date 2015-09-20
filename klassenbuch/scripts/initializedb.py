@@ -40,14 +40,17 @@ def main(argv=sys.argv):
     DBSession.configure(bind=engine)
     Base.metadata.create_all(engine)
     with transaction.manager:
-        pupil1 = MyModel(name='Hans')
-        DBSession.add(pupil1)
-    with transaction.manager:
+        # create one pupil named hans
+        pupil1 = Pupil(name='Hans')
+        # create a classbook entry 
         eintrag1 = Entry(
             date=datetime.date.today(),
-            pupil=pupil1,
             lesson_no=1,
             attendance=True,
-            #delay=25,
+            # delay=25,
             )
+        # add the entry to hans
+        eintrag1.pupil = [pupil1]
+        # now add them to the database for persistence
+        DBSession.add(pupil1)
         DBSession.add(eintrag1)
