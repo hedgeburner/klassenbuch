@@ -19,6 +19,8 @@ from ..models import (
     Pupil,
     Day,
     Lesson,
+    SchoolYear,
+    SchoolYearDay
     )
 
 
@@ -40,6 +42,14 @@ def main(argv=sys.argv):
     DBSession.configure(bind=engine)
     Base.metadata.create_all(engine)
     with transaction.manager:
+        #create two schoolyears
+        
+        this_year = SchoolYear(name="2015/16", start_date=datetime.date(2015, 9, 7),
+                                end_date=datetime.date(2016, 7, 22))
+        DBSession.add(this_year)
+        DBSession.flush()
+        first_day = SchoolYearDay(date=datetime.date(2015,9,7), year_id = this_year.id)
+        second_day = SchoolYearDay(date=datetime.date(2015,12,4), year_id = this_year.id)
         #create a lesson for pupil1
         lesson1 = Lesson(
             attendance=True,
@@ -63,6 +73,9 @@ def main(argv=sys.argv):
             )
         # create one pupil named hans
         pupil1 = Pupil(name='Häns', days=[heute])
+        
         # now add them to the database for persistence
         DBSession.add(pupil1)
         DBSession.add(heute)
+        DBSession.add(first_day)
+        DBSession.add(second_day)

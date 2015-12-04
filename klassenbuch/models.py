@@ -24,6 +24,31 @@ DBSession = scoped_session(sessionmaker(extension=ZopeTransactionExtension()))
 Base = declarative_base()
 
 
+class SchoolYear(Base):
+    """
+    A list of all school years.
+    """
+    __tablename__ = 'schoolyear'
+    id = Column(Integer, primary_key=True)
+    name = Column(Unicode, unique=True)
+    start_date = Column(Date)
+    end_date = Column(Date)
+    
+    @classmethod
+    def get_by_id(cls, id):
+        return DBSession.query(cls).filter(cls.id == id).first()
+    
+
+class SchoolYearDay(Base):
+    """
+    A list containing all valid schooldays in a schoolyear.
+    """
+    __tablename__ = 'schoolyeardays'
+    id = Column(Integer, primary_key=True)
+    date = Column(Date)
+    year_id = Column(Integer, ForeignKey('schoolyear.id'))
+    
+
 class Klasse(Base):
     """
     A class (or course) of pupils
@@ -32,6 +57,7 @@ class Klasse(Base):
     id = Column(Integer, primary_key=True)
     name = Column(Unicode)
     timetable = None
+    #pupils = relationship("Pupil", backref='klasse')
     
 
 class Pupil(Base):
