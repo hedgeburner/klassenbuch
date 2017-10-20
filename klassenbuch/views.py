@@ -9,6 +9,7 @@ from pyramid.response import Response
 from pyramid.view import view_config
 from pyramid.httpexceptions import HTTPFound
 
+import sqlalchemy
 from sqlalchemy.exc import DBAPIError
 
 from .models import (
@@ -16,8 +17,20 @@ from .models import (
     Day,
     Lesson,
     Pupil,
-    Klasse
+    Klasse,
+    SchoolYear,
     )
+
+@view_config(route_name='list_schoolyears', renderer='templates/list_years.pt')
+def list_schoolyears(request):
+    result = []
+    for  year in DBSession.query(SchoolYear):
+        result.append(year)
+    if not result:
+        text = "Kein Schuljahr in der Datenbank. Lege eines an!"
+    else:
+        text = ''
+    return {'text': text, 'years': result}
 
 @view_config(route_name='view_day', renderer='templates/view_day.pt')
 def day_view(request):
@@ -97,8 +110,12 @@ def newyear_view(request):
         new_year = SchoolYear(name=appstruct["name"],
                               start_date=appstruct["start_date"],
                                 end_date=appstruct["end_date"])
-        DBSession.add(new_year)
-        DBSession.flush()
+        try:
+            DBSession.add(new_year)
+            DBSession.flush()
+        except sqlalchemy.exc.IntegrityError:
+            #Hier muss noch mehr hin, was, wenn es das Schuljahr schon gibt?
+            pass
         
         for datum in school_date_list:
             #verspeichern
@@ -106,11 +123,14 @@ def newyear_view(request):
                 date=datum,
                 year_id=new_year.id
             )
-        print("That worked")
+            DBSession.add(new_date)
         return HTTPFound(location=request.route_url('year_view',
                                                     year_id=new_year.id))
     html = form.render()
     return {'form': html,}
+
+
+
     
 @view_config(route_name='year_view', renderer='templates/year_view.pt')
 def year_view(request):

@@ -9,10 +9,10 @@ def create_date_list(appstruct):
     result = []
     now = start
     while now <= end:
-        if is_weekday(now) and (now not in holidays) and
+        if (is_weekday(now) and (now not in holidays) and
         not (appstruct["begin_herbst"] <= now <= appstruct["end_herbst"]) and
         not (appstruct["begin_winter"] <= now <= appstruct["end_winter"]) and
-        not (appstruct["beginn_easter"] <= now <= appstruct["end_easter"]):
+        not (appstruct["begin_ostern"] <= now <= appstruct["end_ostern"])):
             result.append(now)
         now += tag
     return result
@@ -35,7 +35,7 @@ def calculate_easter(year):
     return result
 
 def get_holidays(startyear):
-    """calculate all official holidays starting from 1.9
+    """calculate all official holidays in hesse starting from 1.9
     of starting year - 31.8. of next year.
     return a set.
     """
@@ -56,6 +56,3 @@ def is_weekday(date):
     return true if the date is a weekday.
     """
     return date.isoweekday() < 6
-    
-print(create_date_list({"start_date": datetime.date(2014, 9, 5),
-                        "end_date": datetime.date(2015, 7, 26)}))

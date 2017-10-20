@@ -19,6 +19,7 @@ def main(global_config, **settings):
     config.add_route('home', '/')
     config.add_route('view_day', '/view_day/{dayid}')
     config.add_route('create_newyear', '/newyear')
+    config.add_route('list_schoolyears', '/list_years')
     config.add_route('year_view', '/year_view/{year_id}')
     config.scan()
     return config.make_wsgi_app()
